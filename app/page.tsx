@@ -22,7 +22,7 @@ export default function EtsyFeeCalculator() {
     const payment = subtotal * 0.03 + 0.25;
     const listing = 0.2;
     const total = transaction + payment + listing;
-    const net = p - total;
+    const net = subtotal - total;
 
     setFees({ transaction, payment, listing, total, net });
   }, [price, shipping]);
@@ -97,7 +97,7 @@ export default function EtsyFeeCalculator() {
           font-weight: 500;
           color: var(--ink);
           background: #fafaf8;
-          transition: all 0.2s ease;
+          transition-all duration-300ms;
           outline: none;
           -moz-appearance: textfield;
         }
@@ -276,7 +276,7 @@ export default function EtsyFeeCalculator() {
 
       {/* HERO */}
       <section className="hero-bg relative z-0 py-20 px-6 text-center">
-        <div className="relative z-10 max-w-2xl mx-auto">
+        <div className="relative z-10 max-w-4xl mx-auto">
           {/* Live badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2 mb-8">
             <span className="pulse-dot"></span>
@@ -297,7 +297,7 @@ export default function EtsyFeeCalculator() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent"
             }}>
-              Calculator
+              Calculator (2025)
             </span>
           </h1>
 
@@ -311,12 +311,12 @@ export default function EtsyFeeCalculator() {
           <div className="trust-row flex items-center justify-center gap-5">
             {["Free Tool", "No Signup Required", "Updated for 2025"].map((t, i) => (
               <div key={t} className="flex items-center">
-                {i > 0 && <div className="divider" />}
+                {i > 0 && <div className="divider" key={`div-${i}`} />}
                 <span className="trust-badge" key={t}>
                   <span className="check">✓</span>
                   {t}
                 </span>
-                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -324,7 +324,7 @@ export default function EtsyFeeCalculator() {
 
       {/* CARD */}
       <section className="relative z-10 px-4 pb-20" style={{ marginTop: -40 }}>
-        <div className="card max-w-xl mx-auto p-8">
+        <div className="card max-w-2xl mx-auto p-8">
 
           {/* Inputs */}
           <div style={{ marginBottom: 28 }}>
@@ -420,44 +420,6 @@ export default function EtsyFeeCalculator() {
             </div>
           </div>
 
-
-          <div
-            style={{
-              marginTop: 16,
-              background: "#fafaf8",
-              borderRadius: 16,
-              padding: 20,
-              border: "1px solid #ece9e2",
-            }}
-          >
-            <div className="fee-row">
-              <span className="fee-label">Sale Price</span>
-              <span className="fee-value">
-                {fmt((parseFloat(price) || 0) + (parseFloat(shipping) || 0))}
-              </span>
-            </div>
-
-            <div className="fee-row">
-              <span className="fee-label">Total Fees</span>
-              <span className="fee-value">
-                {fmt(fees.total)}
-              </span>
-            </div>
-
-            <div className="fee-row">
-              <span className="fee-label">Net Revenue</span>
-              <span
-                className="fee-value"
-                style={{
-                  color: "#1a7a5e",
-                  fontWeight: 700,
-                }}
-              >
-                {fmt(Math.max(fees.net, 0))}
-              </span>
-            </div>
-          </div>
-
           {/* Margin line */}
           {parseFloat(price) > 0 && (
             <div style={{ marginTop: 12, textAlign: "center" }}>
@@ -497,9 +459,10 @@ export default function EtsyFeeCalculator() {
           </div>
         </div>
       </section>
+
       <section
         style={{
-          maxWidth: 900,
+          maxWidth: 800,
           margin: "0 auto",
           padding: "60px 20px",
         }}
@@ -518,29 +481,29 @@ export default function EtsyFeeCalculator() {
 
         <div style={{ display: "grid", gap: 24 }}>
           <div>
-            <h3 style={{ fontWeight: 700, marginBottom: 8 }}>
+            <h3 style={{ color: "#022777",fontWeight: 700, marginBottom: 8 }}>
               What fees does Etsy charge?
             </h3>
-            <p style={{ color: "#666", lineHeight: 1.7 }}>
+            <p style={{ color: "#4b5563", lineHeight: 1.8,fontSize: 16, }}>
               Etsy charges a $0.20 listing fee, a 6.5% transaction fee,
               and payment processing fees.
             </p>
           </div>
 
           <div>
-            <h3 style={{ fontWeight: 700, marginBottom: 8 }}>
+            <h3 style={{ color: "#022777",fontWeight: 700, marginBottom: 8 }}>
               How is Etsy transaction fee calculated?
             </h3>
-            <p style={{ color: "#666", lineHeight: 1.7 }}>
+            <p style={{ color: "#4b5563", lineHeight: 1.8,fontSize: 16, }}>
               Etsy charges 6.5% on the total order value including shipping.
             </p>
           </div>
 
           <div>
-            <h3 style={{ fontWeight: 700, marginBottom: 8 }}>
+            <h3 style={{ color: "#022777",fontWeight: 700, marginBottom: 8 }}>
               Does Etsy charge fees on shipping?
             </h3>
-            <p style={{ color: "#666", lineHeight: 1.7 }}>
+            <p style={{ color: "#4b5563", lineHeight: 1.8,fontSize: 16, }}>
               Yes. Etsy applies transaction fees on both item price and shipping amount.
             </p>
           </div>
