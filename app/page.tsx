@@ -3,8 +3,64 @@
 import { useState, useEffect } from "react";
 
 export default function EtsyFeeCalculator() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+        {
+          "@type": "Question",
+          name: "What fees does Etsy charge?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Etsy charges a $0.20 listing fee, a 6.5% transaction fee, and payment processing fees.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How is Etsy transaction fee calculated?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Etsy charges 6.5% on the total order value including shipping.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Does Etsy charge fees on shipping?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Etsy applies transaction fees on both item price and shipping amount.",
+          },
+        },
+      ],
+    };
+
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Etsy Fee Calculator",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+  };
+
+  const exampleBtn: React.CSSProperties = {
+    border: "1px solid #e8e6e0",
+    borderRadius: 999,
+    padding: "8px 14px",
+    background: "white",
+    cursor: "pointer",
+    fontSize: 13,
+    fontWeight: 600,
+  };
+
   const [price, setPrice] = useState<string>("");
   const [shipping, setShipping] = useState<string>("");
+
+
   const [fees, setFees] = useState({
     transaction: 0,
     payment: 0,
@@ -32,6 +88,14 @@ export default function EtsyFeeCalculator() {
 
   return (
     <main className="min-h-screen bg-[#f5f4f0] font-['Sora',sans-serif]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+      />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
 
@@ -329,6 +393,17 @@ export default function EtsyFeeCalculator() {
           {/* Inputs */}
           <div style={{ marginBottom: 28 }}>
             <p className="section-label">Your Pricing</p>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+              <button onClick={() => { setPrice("30"); setShipping("5"); }} style={exampleBtn}>
+                💍 Jewelry
+              </button>
+              <button onClick={() => { setPrice("25"); setShipping("4"); }} style={exampleBtn}>
+                👕 T-Shirt
+              </button>
+              <button onClick={() => { setPrice("10"); setShipping("0"); }} style={exampleBtn}>
+                📄 Digital
+              </button>
+            </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div>
                 <label style={{ fontSize: 13, fontWeight: 600, color: "#4b4860", display: "block", marginBottom: 6 }}>
@@ -420,6 +495,34 @@ export default function EtsyFeeCalculator() {
             </div>
           </div>
 
+          {/* Revenue Summary Box */}
+          <div
+            style={{
+              marginTop: 20,
+              border: "1px solid #ececec",
+              borderRadius: 16,
+              padding: 16,
+              background: "#fafaf8",
+            }}
+          >
+            <div className="fee-row">
+              <span>Sale Price</span>
+              <strong>{fmt((parseFloat(price) || 0) + (parseFloat(shipping) || 0))}</strong>
+            </div>
+            <div className="fee-row">
+              <span>Total Fees</span>
+              <strong>{fmt(fees.total)}</strong>
+            </div>
+            <div className="fee-row">
+              <span>You Keep</span>
+              <strong style={{ color: "#1a7a5e" }}>
+                {parseFloat(price) > 0
+                  ? `${((fees.net / parseFloat(price)) * 100).toFixed(1)}%`
+                  : "0%"}
+              </strong>
+            </div>
+          </div>
+
           {/* Margin line */}
           {parseFloat(price) > 0 && (
             <div style={{ marginTop: 12, textAlign: "center" }}>
@@ -507,16 +610,148 @@ export default function EtsyFeeCalculator() {
               Yes. Etsy applies transaction fees on both item price and shipping amount.
             </p>
           </div>
+
+          <div>
+            <h3 style={{ color: "#022777", fontWeight: 700, marginBottom: 8 }}>
+              What is Etsy payment processing fee?
+            </h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, fontSize: 16 }}>
+              Etsy charges approximately 3% + $0.25 payment processing fee per transaction.
+            </p>
+          </div>
+
+          <div>
+            <h3 style={{ color: "#022777", fontWeight: 700, marginBottom: 8 }}>
+              How much does Etsy take from a sale?
+            </h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, fontSize: 16 }}>
+              Etsy deducts listing, transaction, and payment processing fees from every sale.
+            </p>
+          </div>
+
+          <div>
+            <h3 style={{ color: "#022777", fontWeight: 700, marginBottom: 8 }}>
+              Can I include shipping in my Etsy pricing?
+            </h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, fontSize: 16 }}>
+              Yes. Many sellers include shipping costs directly in product pricing.
+            </p>
+          </div>
+
+          <div>
+            <h3 style={{ color: "#022777", fontWeight: 700, marginBottom: 8 }}>
+              Does Etsy charge a listing fee on every sale?
+            </h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, fontSize: 16 }}>
+              Etsy charges a $0.20 listing fee each time a listing is published or renewed.
+            </p>
+          </div>
+
+          <div>
+            <h3 style={{ color: "#022777", fontWeight: 700, marginBottom: 8 }}>
+              How accurate is this Etsy fee calculator?
+            </h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, fontSize: 16 }}>
+              This calculator uses Etsy's published fee structure and provides accurate estimates.
+            </p>
+          </div>
+
+          <div>
+            <h3 style={{ color: "#022777", fontWeight: 700, marginBottom: 8 }}>
+              Can I calculate Etsy profit before listing?
+            </h3>
+            <p style={{ color: "#4b5563", lineHeight: 1.8, fontSize: 16 }}>
+              Yes. Enter product and shipping costs to estimate your net revenue before publishing.
+            </p>
+          </div>
         </div>
       </section>
 
 
+      <section
+        style={{
+          maxWidth: 800,
+          margin: "0 auto",
+          padding: "40px 20px",
+          textAlign: "center",
+        }}
+      >
+        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 20, color: "#1a1a2e" }}>
+          More Seller Tools Coming Soon
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gap: 12,
+            maxWidth: 500,
+            margin: "0 auto",
+          }}
+        >
+          {[
+            "✓ Etsy Profit Calculator",
+            "✓ Etsy Pricing Calculator",
+            "✓ Amazon FBA Calculator",
+            "✓ Shopify Profit Calculator",
+          ].map((item) => (
+            <div
+              key={item}
+              style={{
+                padding: "14px 20px",
+                background: "white",
+                borderRadius: 12,
+                border: "1px solid #e8e6e0",
+                fontSize: 15,
+                fontWeight: 600,
+                color: "#1a7a5e",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+              }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SEO Content Section */}
+      <section
+        style={{
+          maxWidth: 900,
+          margin: "0 auto",
+          padding: "20px 20px 80px",
+        }}
+      >
+        <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 24, color: "#1a1a2e" }}>
+          How Etsy Fees Work
+        </h2>
+        <p style={{ color: "#4b5563", lineHeight: 1.9, marginBottom: 20 }}>
+          Etsy charges sellers three primary fees: a listing fee, transaction fee,
+          and payment processing fee. Understanding these costs helps you set
+          profitable prices and avoid losing money on every sale.
+        </p>
+
+        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 16, marginTop: 40, color: "#1a1a2e" }}>
+          Etsy Fee Formula
+        </h2>
+        <p style={{ color: "#4b5563", lineHeight: 1.9, marginBottom: 20 }}>
+          Total Etsy Fees = Listing Fee + Transaction Fee + Payment Processing Fee
+        </p>
+
+        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 16, marginTop: 40, color: "#1a1a2e" }}>
+          Why Use This Etsy Fee Calculator?
+        </h2>
+        <p style={{ color: "#4b5563", lineHeight: 1.9 }}>
+          This free Etsy fee calculator helps Etsy sellers estimate profit,
+          revenue, fees, and net earnings before creating listings. Use it to
+          price products correctly and improve your store profitability.
+        </p>
+      </section>
+
       {/* FOOTER */}
       <footer style={{ borderTop: "1px solid #e8e6e0", padding: "24px 16px", textAlign: "center" }}>
         <div style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", marginBottom: 8 }}>
-          <a href="#" className="footer-link">Privacy Policy</a>
-          <a href="#" className="footer-link">How fees are calculated</a>
-          <a href="#" className="footer-link">Etsy Seller Handbook</a>
+          <a href="https://www.etsy.com/legal/fees" className="footer-link">Privacy Policy</a>
+          <a href="https://www.etsy.com/legal/fees" className="footer-link">How fees are calculated</a>
+          <a href="https://www.etsy.com/seller-handbook" className="footer-link">Etsy Seller Handbook</a>
         </div>
         <p style={{ fontSize: 12, color: "#c0bdb6", margin: 0 }}>
           © 2025 Etsy Fee Calculator (2025) · Not affiliated with Etsy, Inc.
